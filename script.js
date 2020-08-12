@@ -15,6 +15,7 @@ const showError = (input, msg) => {
 
     formBox.classList.add('error');
     errorMsg.textContent = msg;
+
 }
 
 clearError = input => {
@@ -38,8 +39,10 @@ const checkMail = email => {
 
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/;
 
-        if(!re.test(email.value)){
-            showError(email,'Wpisz poprawny adres E-mail');
+        if(re.test(email.value)){
+            clearError(email);
+        }else {
+            showError(email,"E-mail nie jest poprawny");
         }
 }
 const checkForm = input => {
@@ -52,6 +55,21 @@ const checkForm = input => {
     })
 }
 
+const checkErrors = () =>{
+
+    const allInputs = document.querySelectorAll(".form-box");
+    let errorCount = 0;
+    allInputs.forEach(el => {
+        if(el.classList.contains('error')){
+            errorCount++;
+        }
+    })
+
+    if(errorCount === 0){
+        popup.classList.add('show-popup');
+    }
+}
+
 sendBtn.addEventListener('click', e =>{
     e.preventDefault();
 
@@ -59,6 +77,8 @@ sendBtn.addEventListener('click', e =>{
     checkLength(username,3);
     checkLength(pass,8);
     checkPassword();
+    checkMail(email);
+    checkErrors();
 });
 
 clearBtn.addEventListener('click', e => {
@@ -66,7 +86,7 @@ clearBtn.addEventListener('click', e => {
 
     inputs.map(function(e){
         e.value = "";
+        clearError(e);
     });
-
 
 });
